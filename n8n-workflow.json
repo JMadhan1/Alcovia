@@ -1,0 +1,121 @@
+{
+  "name": "Alcovia Focus Session Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "alcovia-focus",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Focus Session Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300],
+      "webhookId": "alcovia-focus"
+    },
+    {
+      "parameters": {
+        "url": "=http://localhost:3001/n8n/check-dedup?session_id={{ $json.body.session_id }}",
+        "options": {}
+      },
+      "id": "check-dedup",
+      "name": "Check Dedup (server)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.already_sent }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "if-already-sent",
+      "name": "Already Sent?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"duplicate_skipped\", \"session_id\": $('Focus Session Webhook').item.json.body.session_id }",
+        "options": {}
+      },
+      "id": "respond-duplicate",
+      "name": "Respond Duplicate",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [860, 180]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/webhook/notify",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Focus Session Webhook').item.json.body) }}",
+        "options": {}
+      },
+      "id": "send-notification",
+      "name": "Send to Mock Sink",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [860, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/n8n/mark-sent",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"session_id\": $('Focus Session Webhook').item.json.body.session_id }",
+        "options": {}
+      },
+      "id": "mark-sent",
+      "name": "Mark Sent (server)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1080, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"sent\", \"session_id\": $('Focus Session Webhook').item.json.body.session_id }",
+        "options": {}
+      },
+      "id": "respond-sent",
+      "name": "Respond Sent",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1300, 400]
+    }
+  ],
+  "connections": {
+    "Focus Session Webhook": { "main": [[{ "node": "Check Dedup (server)", "type": "main", "index": 0 }]] },
+    "Check Dedup (server)": { "main": [[{ "node": "Already Sent?", "type": "main", "index": 0 }]] },
+    "Already Sent?": {
+      "main": [
+        [{ "node": "Respond Duplicate", "type": "main", "index": 0 }],
+        [{ "node": "Send to Mock Sink", "type": "main", "index": 0 }]
+      ]
+    },
+    "Send to Mock Sink": { "main": [[{ "node": "Mark Sent (server)", "type": "main", "index": 0 }]] },
+    "Mark Sent (server)": { "main": [[{ "node": "Respond Sent", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "meta": { "templateCredsSetupCompleted": true },
+  "pinData": {}
+}

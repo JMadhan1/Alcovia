@@ -1,0 +1,75 @@
+{
+  "operations": [
+    {
+      "op_id": "bb289807-55c1-4960-86e7-3deec0e050d4",
+      "student_id": "student-001",
+      "device_id": "device-A",
+      "op_type": "SESSION_SUCCESS",
+      "payload": "{\"session_id\":\"74ce507c-9804-4879-9316-86076aa1d84f\",\"target_minutes\":25,\"started_at\":1781165184502}",
+      "lamport_clock": 1,
+      "created_at": 1781165184502,
+      "server_seq": 1
+    },
+    {
+      "op_id": "e1e895a5-41ab-48ed-8d87-ff05f0afafbd",
+      "student_id": "student-001",
+      "device_id": "device-B",
+      "op_type": "SESSION_SUCCESS",
+      "payload": "{\"session_id\":\"74ce507c-9804-4879-9316-86076aa1d84f\",\"target_minutes\":25,\"started_at\":1781165184555}",
+      "lamport_clock": 1,
+      "created_at": 1781165184555,
+      "server_seq": 2
+    }
+  ],
+  "sessions": [
+    {
+      "session_id": "74ce507c-9804-4879-9316-86076aa1d84f",
+      "student_id": "student-001",
+      "device_id": "device-A",
+      "target_minutes": 25,
+      "started_at": 1781165184502,
+      "completed_at": 1781165184521,
+      "status": "success",
+      "fail_reason": null,
+      "reward_granted": 1,
+      "notified": 1
+    }
+  ],
+  "tasks": [],
+  "student_state": [
+    {
+      "student_id": "student-001",
+      "coins": 50,
+      "streak_days": 1,
+      "focus_minutes_today": 25,
+      "last_focus_date": "2026-06-11"
+    }
+  ],
+  "n8n_sent": [
+    {
+      "session_id": "74ce507c-9804-4879-9316-86076aa1d84f",
+      "sent_at": 1781165184521
+    }
+  ],
+  "server_seq": 2,
+  "notify_log": [
+    {
+      "session_id": "74ce507c-9804-4879-9316-86076aa1d84f",
+      "student_id": "student-001",
+      "streak_days": 1,
+      "coins_earned": 50,
+      "fired_at": 1781165184521,
+      "source_device": "device-A",
+      "duplicate_blocked": false
+    },
+    {
+      "session_id": "74ce507c-9804-4879-9316-86076aa1d84f",
+      "student_id": "student-001",
+      "streak_days": 1,
+      "coins_earned": 0,
+      "fired_at": 1781165184557,
+      "source_device": "device-B",
+      "duplicate_blocked": true
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "alcovia",
+  "private": true,
+  "scripts": {
+    "dev:server": "cd apps/server && npm run dev",
+    "dev:client": "cd apps/client && npx expo start --web"
+  }
+}

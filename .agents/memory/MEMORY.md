@@ -1,0 +1,2 @@
+- [Metro ESM/CJS fix](metro-esm-cjs-fix.md) — expo metro-config uses `import` condition causing @babel/runtime helpers to resolve to ESM; fix: set `unstable_conditionNames: ['require','default']` in metro.config.js
+- [Metro 0.84 compat patches](metro-compat-patches.md) — multiple metro 0.84 + expo 52 incompatibilities patched in apps/client/scripts/patch-metro.js (postinstall)
