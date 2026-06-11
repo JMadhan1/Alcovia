@@ -60,6 +60,8 @@ npx n8n                       # http://localhost:5678
 ```
 The workflow dedups over HTTP against the server (`/n8n/check-dedup` + `/n8n/mark-sent`),
 so exactly-once **survives an n8n restart** — unlike static-data dedup.
+
+> **Note:** The n8n workflow uses a mock notification sink (a simple HTTP endpoint that logs the payload) rather than a real WhatsApp API. The exactly-once dedup logic is fully implemented end-to-end; swapping in a real provider (Twilio / Meta / AiSensy) is a one-line URL change.
 </details>
 
 ---
